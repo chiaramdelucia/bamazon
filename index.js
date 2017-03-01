@@ -1,5 +1,7 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+const purchase = require('./purchase.js');
+const prettyTable = require('console.table');
 
 const connection = mysql.createConnection ({
 	host: 'localhost',
@@ -20,8 +22,8 @@ connection.connect (function (err){
 function showProducts() {
 	connection.query('SELECT item_id, product_name, price FROM products', function (err, results) {
 		if (err) throw err;
-		console.log("Welcome to Bamazon! Please view our cataloge and type BUY to make a purchase.");
-		console.log(results);
+		console.table('Bamazon', results);
+		enterApp();
 	});
 
 	function enterApp() {
@@ -38,24 +40,22 @@ function showProducts() {
 
 	]).then(function(user){
 
-
-
 		switch (user.enter){
 		
 			case 'BUY': 
-				return console.log('hello!');
+				return purchase.make_purchase();
 				break;
 
 			case 'GTFO':
-			return console.log('see ya later');
+			console.log('see ya later');
+			return process.exit();
 			break;
 			};
-
 			
 		});
 
 	};
-	enterApp();
+
 };
 
 showProducts();
